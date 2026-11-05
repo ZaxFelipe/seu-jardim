@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jardim de Presentes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Um jardim de caixas de presente, cada uma escondendo uma flor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Caveat:wght@500;700&family=Nunito:ital,wght@0,400;0,600;0,800;1,400&display=swap">
+<style>
+/* Layout: canteiro de caixas-adesivo — abertura com título gordo, grade de presentes que flutuam, presente final dourado e tela de carta */
+:root{
+  --bg:#FFF0F4; --bg-2:#FFE1EA; --card:#FFFFFF;
+  --ink:#3A1838; --ink-soft:#71506E;
+  --petal:#FF6F91; --leaf:#4F9361; --sun:#FFC845; --lilac:#A88BF5;
+  --gold:#A8862A; --final-bg:#FFF8E6;
+  --line:#3A1838; --on-accent:#3A1838; --outline:#3A1838;
+  --scrim:rgba(58,24,56,.45);
+  --f-display:"Bagel Fat One","Arial Rounded MT Bold","Trebuchet MS",sans-serif;
+  --f-body:"Nunito","Segoe UI",system-ui,sans-serif;
+  --f-hand:"Caveat","Comic Sans MS",cursive;
+  --radius:28px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1C0F22; --bg-2:#26142E; --card:#2F1A38;
+    --ink:#FFE9F0; --ink-soft:#D3B8D2;
+    --petal:#FF8FAB; --leaf:#7CC08A; --sun:#FFD666; --lilac:#C7B2FF;
+    --gold:#E8C766; --final-bg:#21170D;
+    --line:#F4C6D6; --scrim:rgba(10,4,14,.72); color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1C0F22; --bg-2:#26142E; --card:#2F1A38;
+  --ink:#FFE9F0; --ink-soft:#D3B8D2;
+  --petal:#FF8FAB; --leaf:#7CC08A; --sun:#FFD666; --lilac:#C7B2FF;
+  --gold:#E8C766; --final-bg:#21170D;
+  --line:#F4C6D6; --scrim:rgba(10,4,14,.72); color-scheme:dark;
+}
+
+html.lenis, html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto !important}
+.lenis.lenis-stopped{overflow:hidden}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--f-body); font-size:17px; line-height:1.6;
+  overflow-x:clip; -webkit-font-smoothing:antialiased;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+img,svg{max-width:100%}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--lilac);outline-offset:3px;border-radius:8px}
+
+.wrap{
+  max-width:1180px; margin-inline:auto;
+  padding-left:max(20px, env(safe-area-inset-left,0px));
+  padding-right:max(20px, env(safe-area-inset-right,0px));
+}
+.hand{font-family:var(--f-hand);font-weight:700}
+.eyebrow{
+  margin:0; font-weight:800; font-size:.78rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-soft); display:inline-flex; align-items:center; gap:10px;
+}
+.eyebrow::before{content:"";width:12px;height:12px;border-radius:50% 50% 50% 0;background:var(--petal);border:2px solid var(--line);transform:rotate(-45deg)}
+.word{display:inline-block;white-space:nowrap}
+.char{display:inline-block;will-change:transform}
+.petal{transform-box:fill-box;transform-origin:50% 100%}
+
+/* ---------- Loader ---------- */
+.loader{
+  position:fixed; inset:0; z-index:100; background:var(--petal); color:var(--on-accent);
+  display:grid; place-items:center; align-content:center; gap:18px;
+  animation:loaderAuto .7s ease 4s forwards;
+}
+.loader svg{width:min(170px,40vw)}
+.loader__text{margin:0;font-family:var(--f-hand);font-size:1.7rem;font-weight:700}
+@keyframes loaderAuto{to{transform:translateY(-100%);visibility:hidden}}
+
+/* ---------- Header ---------- */
+.header{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  padding-top:calc(env(safe-area-inset-top,0px) + 14px);
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+  pointer-events:none;
+}
+.header__bar{
+  pointer-events:auto; max-width:1180px; margin-inline:auto;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:var(--card); border:2.5px solid var(--line); border-radius:99px;
+  padding:7px 8px 7px 14px; box-shadow:4px 4px 0 var(--line);
+}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;font-family:var(--f-display);font-size:1.25rem;line-height:1;min-width:0}
+.logo svg{width:32px;height:32px;flex-shrink:0}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a{text-decoration:none;font-weight:800;font-size:.92rem;padding:8px 14px;border-radius:99px}
+.nav a:hover{background:var(--bg-2)}
+.icon-btn{
+  width:40px;height:40px;border-radius:50%;border:2.5px solid var(--line);flex-shrink:0;
+  background:var(--sun);color:var(--on-accent);display:grid;place-items:center;cursor:pointer;padding:0;
+}
+.icon-btn--sound{background:var(--lilac)}
+.icon-btn svg{width:20px;height:20px}
+.theme-btn .moon{display:none}
+:root[data-theme="dark"] .theme-btn .sun{display:none}
+:root[data-theme="dark"] .theme-btn .moon{display:block}
+.icon-btn--sound .off{display:none}
+.icon-btn--sound[aria-pressed="false"] .on{display:none}
+.icon-btn--sound[aria-pressed="false"] .off{display:block}
+@media (max-width:560px){ .nav a{display:none} .logo span.logo__long{display:none} }
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative; overflow:hidden; cursor:crosshair;
+  padding-block:130px 110px;
+  background:
+    radial-gradient(40% 50% at 18% 30%, color-mix(in srgb,var(--lilac) 24%, transparent), transparent 70%),
+    radial-gradient(38% 48% at 85% 70%, color-mix(in srgb,var(--sun) 30%, transparent), transparent 70%),
+    var(--bg);
+}
+.hero__garden{position:absolute;inset:0;pointer-events:none;z-index:0}
+.bloom{position:absolute;left:var(--x);top:var(--y);width:calc(var(--s) * 1px)}
+.bloom svg,.planted svg{display:block;width:100%;height:auto;overflow:visible}
+.planted{position:absolute;pointer-events:none}
+.fall{position:absolute;top:-40px;pointer-events:none}
+.star{position:absolute;left:var(--x);top:var(--y);width:22px;animation:twinkle 2.6s ease-in-out infinite;animation-delay:var(--d,0s)}
+.star path{fill:var(--sun);stroke:var(--outline);stroke-width:2}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0deg);opacity:.5}50%{transform:scale(1.15) rotate(45deg);opacity:1}}
+
+.hero__inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px}
+.hero__trio{display:flex;align-items:flex-end;justify-content:center;margin-bottom:-6px}
+.hero__trio > div svg{display:block;width:100%;height:auto;overflow:visible}
+.trio-a{width:clamp(70px,9vw,100px);transform:rotate(-12deg);margin-right:-14px}
+.trio-b{width:clamp(100px,12vw,136px);position:relative;z-index:1}
+.trio-c{width:clamp(70px,9vw,100px);transform:rotate(12deg);margin-left:-14px}
+.hero__title{
+  margin:0; font-family:var(--f-display); font-weight:400;
+  font-size:clamp(2.8rem, 9vw, 7.4rem); line-height:.98; letter-spacing:-.01em;
+  text-wrap:balance;
+}
+.hero__title .line{display:block}
+.hl{position:relative;color:var(--petal);text-shadow:4px 4px 0 var(--line)}
+.hl::after{
+  content:""; position:absolute; left:2%; right:2%; bottom:-.1em; height:.2em; background:var(--sun);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 12'%3E%3Cpath d='M0 6 Q10 0 20 6 T40 6' fill='none' stroke='black' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left center / .9em 100%;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 12'%3E%3Cpath d='M0 6 Q10 0 20 6 T40 6' fill='none' stroke='black' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x left center / .9em 100%;
+}
+.hero__lead{margin:0;max-width:46ch;font-size:1.18rem;color:var(--ink-soft)}
+.hero__actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px 22px}
+.hint{font-size:1.45rem;color:var(--ink-soft);transform:rotate(-3deg)}
+
+.btn{
+  display:inline-flex;align-items:center;gap:10px;text-decoration:none;
+  padding:14px 26px;border-radius:99px;font-weight:800;font-size:1rem;font-family:var(--f-body);
+  background:var(--petal);color:var(--on-accent);
+  border:2.5px solid var(--line);box-shadow:4px 4px 0 var(--line);
+  transition:transform .2s, box-shadow .2s; cursor:pointer;
+}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--line)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
+.btn--ghost{background:var(--card);color:var(--ink)}
+.btn svg{width:18px;height:18px}
+
+/* ---------- Marquee ---------- */
+.marquee-wrap{overflow:hidden;padding-block:26px;margin-block:-40px -10px;position:relative;z-index:2}
+.marquee{
+  width:112%; margin-left:-6%; transform:rotate(-2.5deg);
+  background:var(--ink); color:var(--bg); border-block:2.5px solid var(--line);
+  display:flex; overflow:hidden; padding-block:14px;
+}
+.marquee__track{display:flex;flex-shrink:0;animation:marquee 40s linear infinite}
+.marquee__track span{font-family:var(--f-display);font-size:clamp(1.3rem,3vw,2rem);white-space:nowrap;padding-inline:18px}
+.marquee__track i{font-style:normal;color:var(--petal);font-family:var(--f-body)}
+@keyframes marquee{to{transform:translateX(-100%)}}
+
+/* ---------- Seções ---------- */
+.wave{display:block;width:100%;height:64px;color:var(--bg-2)}
+.wave--flip{transform:scaleY(-1)}
+.section{padding-block:70px 90px}
+.section--tint{background:var(--bg-2)}
+.section-head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;max-width:760px;margin:0 auto 44px}
+.section-title{
+  margin:0;font-family:var(--f-display);font-weight:400;
+  font-size:clamp(2.4rem,6.4vw,4.6rem);line-height:1.04;text-wrap:balance;
+}
+.section-lead{margin:0;max-width:52ch;color:var(--ink-soft);font-size:1.1rem}
+
+/* ---------- Progresso ---------- */
+.progress{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(280px,100%);margin-top:6px}
+.progress__track{width:100%;height:16px;border-radius:99px;border:2.5px solid var(--line);background:var(--card);overflow:hidden}
+.progress__fill{height:100%;width:0;background:var(--leaf);border-right:2.5px solid var(--line);transition:width .7s cubic-bezier(.3,1.4,.5,1)}
+.progress__fill[style*="width: 0"]{border-right:0}
+.progress__label{margin:0;font-weight:800;font-size:.92rem;font-variant-numeric:tabular-nums}
+
+/* ---------- Caixas de presente ---------- */
+.gifts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 28px}
+.gifts li{display:flex;justify-content:center;min-width:0}
+@media (max-width:680px){ .gifts{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 16px} }
+.gift{
+  appearance:none;background:none;border:0;padding:0;margin:0;font:inherit;color:inherit;cursor:pointer;
+  width:100%;display:flex;flex-direction:column;align-items:center;gap:8px;border-radius:24px;
+}
+.gift__scene{position:relative;display:block;width:100%;max-width:220px;aspect-ratio:1;transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.gift:hover .gift__scene{transform:rotate(-3deg) scale(1.04)}
+.gift__float{position:absolute;inset:0;display:block}
+.gift__body{
+  position:absolute;left:14%;right:14%;bottom:5%;height:52%;display:block;
+  background:var(--papel);border:2.5px solid var(--outline);border-radius:14px;box-shadow:5px 5px 0 var(--line);overflow:hidden;
+}
+.gift__lid{
+  position:absolute;left:8%;right:8%;bottom:56%;height:17%;display:block;
+  background:var(--papel);border:2.5px solid var(--outline);border-radius:12px;box-shadow:4px 4px 0 var(--line);
+}
+.gift__body::before,.gift__lid::before{
+  content:"";position:absolute;top:0;bottom:0;left:50%;width:17%;transform:translateX(-50%);
+  background:var(--laco);border-inline:2.5px solid var(--outline);
+}
+.gift__body::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent 0 14px,color-mix(in srgb,var(--laco) 14%,transparent) 14px 18px)}
+.gift__bow{position:absolute;width:48%;left:50%;bottom:88%;transform:translateX(-50%);color:var(--laco);overflow:visible;display:block}
+.gift__flower{position:absolute;left:22%;right:22%;bottom:34%;display:block;opacity:0}
+.gift__flower svg,.gift__found svg{display:block;width:100%;height:auto;overflow:visible}
+.gift__found{position:absolute;inset:4%;display:grid;place-items:center}
+.gift__found::before{
+  content:"";position:absolute;inset:6%;border-radius:50%;border:2.5px dashed color-mix(in srgb,var(--laco) 70%,var(--line));
+  background:radial-gradient(circle, color-mix(in srgb,var(--laco) 34%,transparent) 0 40%, transparent 70%);
+}
+.gift__found svg{position:relative;width:78%}
+.gift__found .sparkle{position:absolute;top:4%;right:10%;width:20px}
+.gift__name{display:block;min-height:1.3em;font-family:var(--f-display);font-size:1.4rem;line-height:1.1;text-align:center}
+.sparkle path{fill:var(--sun);stroke:var(--outline);stroke-width:2}
+.sparkle{animation:twinkle 2.4s ease-in-out infinite}
+
+/* Presente final */
+.final-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.gift--final .gift__scene{max-width:270px}
+.gift__aura{
+  position:absolute;inset:-14%;border-radius:50%;display:block;opacity:0;transition:opacity .6s;
+  background:radial-gradient(circle, color-mix(in srgb,#F2D27A 75%,transparent) 0 30%, transparent 68%);
+}
+.gift--final:not([data-locked]) .gift__aura{opacity:1;animation:aura 2.6s ease-in-out infinite}
+@keyframes aura{50%{transform:scale(1.12)}}
+.gift--final[data-locked] .gift__float{filter:saturate(.55)}
+.gift__lock{
+  position:absolute;top:6%;right:2%;display:flex;align-items:center;gap:6px;
+  background:var(--card);border:2.5px solid var(--line);border-radius:99px;padding:2px 12px 2px 10px;
+  font-family:var(--f-hand);font-weight:700;font-size:1.25rem;line-height:1.3;color:var(--ink-soft);
+  transform:rotate(6deg);
+}
+.gift__lock svg{width:16px;height:16px}
+.gift--final:not([data-locked]) .gift__lock{display:none}
+.gift--final .gift__spark{position:absolute;width:24px;display:none}
+.gift--final:not([data-locked]) .gift__spark{display:block}
+.gift__spark path{fill:#E8C766;stroke:var(--outline);stroke-width:2}
+.final-msg{margin:0;max-width:34ch;font-family:var(--f-hand);font-weight:700;font-size:1.6rem;line-height:1.2;color:var(--ink-soft)}
+.reset{
+  appearance:none;background:none;border:0;font:inherit;font-size:.85rem;font-weight:600;color:var(--ink-soft);
+  cursor:pointer;margin-top:40px;padding:6px 10px;border-radius:99px;text-decoration:underline;text-underline-offset:3px;
+}
+
+/* ---------- Modal da flor ---------- */
+.modal{
+  position:fixed;inset:0;z-index:80;overflow-y:auto;display:grid;place-items:center;
+  padding-block:calc(env(safe-area-inset-top,0px) + 24px) calc(env(safe-area-inset-bottom,0px) + 24px);
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+}
+.modal__backdrop{position:fixed;inset:0;background:var(--scrim)}
+.modal__card{
+  --laco:#c8435d;
+  position:relative;width:100%;max-width:450px;background:var(--card);border:2.5px solid var(--line);
+  border-radius:var(--radius);box-shadow:8px 8px 0 var(--line);padding:18px 18px 24px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.modal__card:focus{outline:none}
+.modal__art{
+  aspect-ratio:4/3;border-radius:20px;border:2px solid var(--line);display:grid;place-items:center;overflow:hidden;
+  background:
+    radial-gradient(circle, color-mix(in srgb,var(--laco) 32%, transparent) 1.5px, transparent 2px) 0 0 / 18px 18px,
+    color-mix(in srgb,var(--laco) 16%, var(--card));
+}
+.modal__art svg{width:56%;height:auto;overflow:visible}
+.modal__name{margin:0;font-family:var(--f-display);font-weight:400;font-size:2.6rem;line-height:1;text-align:center;color:color-mix(in oklab,var(--laco) 62%,var(--ink))}
+.chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+.chips li{
+  font-weight:800;font-size:.82rem;padding:3px 12px;border-radius:99px;border:2px solid var(--line);
+  background:color-mix(in srgb,var(--laco) 22%, var(--card));
+}
+.modal__label{margin:4px 0 0;font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft)}
+.modal__text{margin:-8px 0 0;font-size:1rem}
+.modal__quote{
+  margin:0;padding:14px 18px;border-radius:18px;font-family:var(--f-hand);font-weight:700;font-size:1.65rem;line-height:1.15;
+  background:color-mix(in srgb,var(--laco) 16%, var(--card));
+}
+.modal__card .btn{align-self:center;margin-top:4px}
+
+/* ---------- Tela final ---------- */
+.flash{position:fixed;inset:0;z-index:85;background:var(--final-bg);opacity:0;pointer-events:none}
+.final{
+  position:fixed;inset:0;z-index:90;overflow-y:auto;
+  background:
+    radial-gradient(60% 40% at 50% 18%, color-mix(in srgb,#F2D27A 40%, transparent), transparent 70%),
+    var(--final-bg);
+}
+.final:focus{outline:none}
+.final__petals{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+.fpetal{position:absolute;top:-30px;border-radius:80% 0 80% 0;border:1.5px solid var(--outline);animation:fpfall linear infinite}
+@keyframes fpfall{to{transform:translate(40px,110vh) rotate(560deg)}}
+.final .star path{fill:#E8C766}
+.final__inner{
+  position:relative;max-width:640px;margin-inline:auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;
+  padding-block:calc(env(safe-area-inset-top,0px) + 50px) calc(env(safe-area-inset-bottom,0px) + 60px);
+}
+.final__flower{position:relative;width:min(280px,70vw)}
+.final__flower > div:last-child svg{position:relative;display:block;width:100%;height:auto;overflow:visible}
+.final__aura{position:absolute;inset:-18%;border-radius:50%;background:radial-gradient(circle, color-mix(in srgb,#F2D27A 70%,transparent) 0 25%, transparent 68%)}
+.final__title{
+  margin:0;font-family:var(--f-display);font-weight:400;font-size:clamp(3.4rem,13vw,7rem);line-height:.95;
+  color:var(--gold);text-shadow:4px 4px 0 var(--line);text-wrap:balance;
+}
+.final__quote{margin:0;max-width:34ch;font-family:var(--f-hand);font-weight:700;font-size:1.75rem;line-height:1.2;color:var(--ink-soft)}
+.letter{
+  width:100%;margin-top:14px;text-align:left;background-color:var(--card);
+  background-image:repeating-linear-gradient(transparent 0 calc(1.9em - 1px), color-mix(in srgb,var(--gold) 28%, transparent) calc(1.9em - 1px) 1.9em);
+  background-position:0 22px;
+  border:2.5px solid var(--line);border-radius:var(--radius);box-shadow:7px 7px 0 var(--line);
+  padding:22px clamp(20px,5vw,40px) 24px;font-size:1.15rem;line-height:1.9em;transform:rotate(-1deg);
+}
+.letter p{margin:0 0 .95em;white-space:pre-line}
+.letter__sign{text-align:right;font-family:var(--f-hand);font-weight:700;font-size:1.9rem;line-height:1.2;color:var(--gold);margin:6px 0 0 !important}
+.final__bye{margin:26px 0 0;font-size:2.2rem;line-height:1.1;color:var(--petal)}
+
+/* ---------- Footer ---------- */
+.footer{background:var(--petal);color:var(--on-accent);padding-block:30px 40px;overflow:hidden}
+.wave--petal{color:var(--petal);background:var(--bg)}
+.footer__big{margin:0;font-family:var(--f-display);font-size:clamp(4rem,17vw,13rem);line-height:.9;letter-spacing:-.02em}
+.footer__row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;margin-top:22px;font-weight:600}
+.footer__row p{margin:0}
+
+/* ---------- Cursor ---------- */
+.cursor{position:fixed;left:0;top:0;width:28px;height:28px;margin:-14px 0 0 -14px;pointer-events:none;z-index:200}
+.cursor__in{width:100%;height:100%;transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+.cursor.is-big .cursor__in{transform:scale(1.9)}
+.cursor svg{width:100%;height:100%;overflow:visible}
+
+@media (max-width:700px){
+  .bloom{width:calc(var(--s) * .55px)}
+  .hide-sm{display:none}
+  .hero{padding-block:120px 90px}
+  .section{padding-block:50px 70px}
+}
+@media (prefers-reduced-motion: reduce){
+  .marquee__track,.star,.sparkle,.fpetal,.gift__aura{animation:none !important}
+  .loader{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="loader" aria-hidden="true">
+  <div data-flower="lotus"></div>
+  <p class="loader__text">preparando o jardim…</p>
+</div>
+
+<header class="header" id="header">
+  <div class="header__bar">
+    <a class="logo" href="#inicio" aria-label="Jardim de Presentes, voltar ao início"><span data-flower="cerejeira"></span>Jardim<span class="logo__long">&nbsp;de Presentes</span></a>
+    <nav class="nav" aria-label="Seções">
+      <a href="#jardim">Caixas</a>
+      <a href="#ultimo">Último presente</a>
+      <button class="icon-btn icon-btn--sound" type="button" id="sound-toggle" aria-pressed="true" aria-label="Som dos presentes">
+        <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+        <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4Z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+      </button>
+      <button class="icon-btn theme-btn" type="button" id="theme-toggle" aria-label="Alternar modo dia e noite">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="inicio">
+    <div class="hero__garden" aria-hidden="true">
+      <div class="bloom" style="--x:3%;--y:24%;--s:140" data-depth="1.2" data-flower="girassol"></div>
+      <div class="bloom" style="--x:86%;--y:12%;--s:120" data-depth=".8" data-flower="rosa"></div>
+      <div class="bloom" style="--x:83%;--y:62%;--s:150" data-depth="1.5" data-flower="orquidea"></div>
+      <div class="bloom hide-sm" style="--x:9%;--y:70%;--s:110" data-depth=".6" data-flower="cerejeira"></div>
+      <svg class="star" style="--x:18%;--y:16%" viewBox="-13 -13 26 26"><path d="M0 -12C2-2 2-2 12 0 2 2 2 2 0 12-2 2-2 2-12 0-2-2-2-2 0-12Z"/></svg>
+      <svg class="star" style="--x:78%;--y:42%;--d:.8s" viewBox="-13 -13 26 26"><path d="M0 -12C2-2 2-2 12 0 2 2 2 2 0 12-2 2-2 2-12 0-2-2-2-2 0-12Z"/></svg>
+      <svg class="star" style="--x:30%;--y:64%;--d:1.4s" viewBox="-13 -13 26 26"><path d="M0 -12C2-2 2-2 12 0 2 2 2 2 0 12-2 2-2 2-12 0-2-2-2-2 0-12Z"/></svg>
+      <svg class="star" style="--x:64%;--y:88%;--d:.4s" viewBox="-13 -13 26 26"><path d="M0 -12C2-2 2-2 12 0 2 2 2 2 0 12-2 2-2 2-12 0-2-2-2-2 0-12Z"/></svg>
+      <svg class="star" style="--x:60%;--y:9%;--d:2s" viewBox="-13 -13 26 26"><path d="M0 -12C2-2 2-2 12 0 2 2 2 2 0 12-2 2-2 2-12 0-2-2-2-2 0-12Z"/></svg>
+    </div>
+
+    <div class="wrap hero__inner">
+      <div class="hero__trio" aria-hidden="true">
+        <div class="trio-a" data-flower="cerejeira"></div>
+        <div class="trio-b" data-flower="lotus"></div>
+        <div class="trio-c" data-flower="lavanda"></div>
+      </div>
+      <p class="eyebrow hero-fade">um presente para você</p>
+      <h1 class="hero__title" id="hero-title">
+        <span class="line">Tem um <span class="hl">jardim</span></span>
+        <span class="line">esperando</span>
+        <span class="line">por você</span>
+      </h1>
+      <p class="hero__lead hero-fade">Algumas flores se esconderam em caixas de presente. Cada uma guarda uma curiosidade e um pequeno recado. Abra com calma.</p>
+      <div class="hero__actions hero-fade">
+        <a class="btn" href="#jardim" id="enter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v9H5v-9M7.5 8a2.5 2.5 0 0 1 0-5C10 3 12 8 12 8s2-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
+          Entrar no jardim
+        </a>
+        <span class="hand hint">ou clique no canteiro para plantar uma flor ✿</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee">
+      <div class="marquee__track">
+        <span>girassol <i>·</i> otimismo</span><span>✿</span><span>rosa <i>·</i> coragem</span><span>✿</span><span>lavanda <i>·</i> serenidade</span><span>✿</span><span>orquídea <i>·</i> paciência</span><span>✿</span><span>cerejeira <i>·</i> renovação</span><span>✿</span><span>lótus <i>·</i> resiliência</span><span>✿</span>
+      </div>
+      <div class="marquee__track">
+        <span>girassol <i>·</i> otimismo</span><span>✿</span><span>rosa <i>·</i> coragem</span><span>✿</span><span>lavanda <i>·</i> serenidade</span><span>✿</span><span>orquídea <i>·</i> paciência</span><span>✿</span><span>cerejeira <i>·</i> renovação</span><span>✿</span><span>lótus <i>·</i> resiliência</span><span>✿</span>
+      </div>
+    </div>
+  </div>
+
+  <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46C240 6 480 86 720 46S1200 6 1440 46V80H0Z" fill="currentColor"/></svg>
+  <section class="section section--tint" id="jardim">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">seis caixas, seis flores</p>
+        <h2 class="section-title" data-split>Jardim de Presentes</h2>
+        <p class="section-lead">Toque em uma caixa para descobrir a flor escondida.</p>
+        <div class="progress" role="progressbar" aria-label="Flores descobertas" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progress">
+          <div class="progress__track"><div class="progress__fill" id="progress-fill"></div></div>
+          <p class="progress__label" id="progress-label" aria-live="polite">0 de 6 flores</p>
+        </div>
+      </div>
+      <ul class="gifts" id="gifts"></ul>
+    </div>
+  </section>
+  <svg class="wave wave--flip" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46C240 6 480 86 720 46S1200 6 1440 46V80H0Z" fill="currentColor"/></svg>
+
+  <section class="section" id="ultimo">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">o último presente</p>
+        <h2 class="section-title" data-split>Guardei o melhor para o fim</h2>
+      </div>
+      <div class="final-wrap">
+        <button class="gift gift--final" id="final-gift" type="button" data-locked style="--laco:#d4af37;--papel:#ffffff">
+          <span class="gift__scene">
+            <span class="gift__aura"></span>
+            <span class="gift__float"></span>
+            <span class="gift__lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>zzz</span>
+            <svg class="gift__spark sparkle" style="top:10%;left:4%" viewBox="-13 -13 26 26"><path d="M0 -12C2-2 2-2 12 0 2 2 2 2 0 12-2 2-2 2-12 0-2-2-2-2 0-12Z"/></svg>
+            <svg class="gift__spark sparkle" style="top:30%;right:0;animation-delay:.8s" viewBox="-13 -13 26 26"><path d="M0 -12C2-2 2-2 12 0 2 2 2 2 0 12-2 2-2 2-12 0-2-2-2-2 0-12Z"/></svg>
+          </span>
+        </button>
+        <p class="final-msg" id="final-msg" aria-live="polite">Este presente está adormecido… faltam 6 flores.</p>
+        <button class="reset" type="button" id="reset" hidden>Fechar as caixas de novo</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<svg class="wave wave--petal" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46C240 6 480 86 720 46S1200 6 1440 46V80H0Z" fill="currentColor"/></svg>
+<footer class="footer" id="footer">
+  <div class="wrap">
+    <p class="footer__big">Jardim</p>
+    <div class="footer__row">
+      <p>Um jardim de caixas de presente, cada uma escondendo uma flor.</p>
+      <a class="btn btn--ghost" href="#inicio">Voltar ao topo ↑</a>
+    </div>
+  </div>
+</footer>
+
+<div class="modal" id="modal" hidden data-lenis-prevent>
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="modal-name" tabindex="-1" id="modal-card">
+    <div class="modal__art" id="modal-art" aria-hidden="true"></div>
+    <h2 class="modal__name reveal" id="modal-name"></h2>
+    <ul class="chips reveal" id="modal-chips"></ul>
+    <h3 class="modal__label reveal">Curiosidade</h3>
+    <p class="modal__text reveal" id="modal-text"></p>
+    <blockquote class="modal__quote reveal" id="modal-quote"></blockquote>
+    <button class="btn reveal" type="button" data-close>Voltar ao jardim</button>
+  </div>
+</div>
+
+<div class="flash" id="flash" aria-hidden="true"></div>
+<section class="final" id="final" hidden data-lenis-prevent role="dialog" aria-modal="true" aria-labelledby="final-title" tabindex="-1">
+  <div class="final__petals" id="final-petals" aria-hidden="true"></div>
+  <div class="wrap final__inner">
+    <div class="final__flower" aria-hidden="true">
+      <div class="final__aura"></div>
+      <div data-flower="lirio" id="final-lily"></div>
+    </div>
+    <h2 class="final__title" id="final-title">Feliz 21 anos</h2>
+    <p class="final__quote" id="final-quote"></p>
+    <article class="letter" id="letter"></article>
+    <p class="final__bye hand">O jardim é seu. Volte sempre.</p>
+    <button class="btn btn--ghost" type="button" id="final-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      Voltar ao jardim
+    </button>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(() => {
+  // ---------- Conteúdo (edite aqui) ----------
+  const FLORES = [
+    {id:'girassol', nome:'Girassol',
+     curiosidade:'Quando ainda são jovens, os girassóis seguem o movimento do sol ao longo do dia, virando-se na direção da luz.',
+     metafora:'Seja como o girassol: procure sempre a luz. Mesmo nos dias nublados, ele sabe para onde olhar.',
+     significados:['otimismo','alegria','lealdade'], laco:'#e9b43c', papel:'#fff4d6'},
+    {id:'rosa', nome:'Rosa',
+     curiosidade:'As rosas existem há milhões de anos, muito antes de os humanos existirem. Hoje há milhares de variedades, em cores e perfumes muito diferentes.',
+     metafora:'A rosa tem espinhos, mas isso não diminui a beleza dela. Nós também somos feitos de delicadeza e força ao mesmo tempo.',
+     significados:['amor','coragem','cuidado'], laco:'#c8435d', papel:'#fde6ea'},
+    {id:'lavanda', nome:'Lavanda',
+     curiosidade:'O aroma da lavanda é conhecido por transmitir calma, e por isso ela é usada há séculos em sachês, chás e perfumes.',
+     metafora:'Algumas pessoas são como a lavanda: basta chegar perto para o mundo ficar mais tranquilo.',
+     significados:['serenidade','acolhimento','paz'], laco:'#9c82d0', papel:'#f0eafb'},
+    {id:'orquidea', nome:'Orquídea',
+     curiosidade:'A família das orquídeas é uma das maiores do reino vegetal, com dezenas de milhares de espécies espalhadas pelo planeta. Muitas florescem apenas depois de muita paciência e cuidado.',
+     metafora:'As coisas mais bonitas costumam pedir tempo. A orquídea não tem pressa para florescer, e quando floresce, vale cada espera.',
+     significados:['sofisticação','paciência','singularidade'], laco:'#b9529c', papel:'#f9e6f3'},
+    {id:'cerejeira', nome:'Cerejeira (Sakura)',
+     curiosidade:'No Japão, as cerejeiras florescem por apenas alguns dias a cada primavera, e as pessoas se reúnem para apreciar esse momento breve.',
+     metafora:'A flor da cerejeira dura pouco e por isso é tão admirada. Ela nos lembra de prestar atenção aos momentos bonitos enquanto eles acontecem.',
+     significados:['efemeridade','renovação','valorizar o presente'], laco:'#f2a5b8', papel:'#fff1f4'},
+    {id:'lotus', nome:'Flor de lótus',
+     curiosidade:'A flor de lótus nasce em águas turvas e, mesmo assim, suas pétalas e folhas permanecem limpas, pois a água escorre por elas.',
+     metafora:'Mesmo quando o começo é complicado, é possível florescer com leveza.',
+     significados:['resiliência','renascimento','crescimento'], laco:'#e98a8f', papel:'#e9f3ec'}
+  ];
+  const FINAL = {id:'lirio', nome:'Lírio-branco',
+    curiosidade:'Em muitas culturas, as flores brancas estão associadas a recomeços, paz e celebrações importantes.',
+    metafora:'O branco é o espaço das páginas ainda por escrever. Que os próximos anos sejam preenchidos com histórias bonitas.',
+    significados:['recomeços','clareza','novas páginas'], laco:'#d4af37', papel:'#ffffff'};
+  // Separe parágrafos da carta com uma linha em branco.
+  const CARTA = `
+Ainda não pensei na frase perfeita.
+`;
+  const ASSINATURA = 'De um local distante, Felipe Moreira Reis';
+  const STORE = 'jardim-de-presentes:v1';
+
+  const OUT = '#3A1838';
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const $ = s => document.querySelector(s);
+
+  // ---------- Desenho das flores ----------
+  function petalPath(l, w, shape) {
+    if (shape === 'pointed') return `M0 0C${w} ${-l*.3} ${w*.7} ${-l*.85} 0 ${-l}C${-w*.7} ${-l*.85} ${-w} ${-l*.3} 0 0Z`;
+    if (shape === 'notch') return `M0 0C${w*1.3} ${-l*.2} ${w*1.25} ${-l*.85} ${w*.4} ${-l}L0 ${-l*.86}L${-w*.4} ${-l}C${-w*1.25} ${-l*.85} ${-w*1.3} ${-l*.2} 0 0Z`;
+    return `M0 0C${w*1.3} ${-l*.2} ${w*1.2} ${-l} 0 ${-l}C${-w*1.2} ${-l} ${-w*1.3} ${-l*.2} 0 0Z`;
+  }
+  const ST = `stroke="${OUT}" stroke-width="2.2" stroke-linejoin="round"`;
+  function radial(layers, center) {
+    let s = '';
+    for (const L of layers) {
+      for (let i = 0; i < L.n; i++) {
+        const a = (i * 360 / L.n + (L.off || 0)).toFixed(1);
+        s += `<g transform="rotate(${a})"><path class="petal" d="${petalPath(L.l, L.w, L.shape)}" fill="${L.c}" ${ST}/>`;
+        if (L.vein) s += `<path d="M0 -8L0 ${-L.l*.75}" stroke="${L.vein}" stroke-width="2.4" stroke-linecap="round"/>`;
+        s += '</g>';
+      }
+    }
+    s += `<circle class="petal" r="${center.r}" fill="${center.c}" ${ST}/>`;
+    if (center.seeds) {
+      const n = 120, k = center.r * .88 / Math.sqrt(n);
+      for (let i = 1; i < n; i++) {
+        const r = k * Math.sqrt(i), t = i * 2.39996;
+        s += `<circle cx="${(r*Math.cos(t)).toFixed(1)}" cy="${(r*Math.sin(t)).toFixed(1)}" r="1.7" fill="#9A6128"/>`;
+      }
+    }
+    if (center.swirl) s += `<path d="M0 0a5 5 0 1 1 5 5a9 9 0 1 1-11-7" fill="none" stroke="${OUT}" stroke-width="2.2" stroke-linecap="round"/>`;
+    if (center.stamens) {
+      const {n, len, c} = center.stamens;
+      for (let i = 0; i < n; i++) {
+        s += `<g transform="rotate(${(i*360/n + 15).toFixed(1)})"><g class="petal"><path d="M0 0L0 ${-len}" stroke="${OUT}" stroke-width="1.8" stroke-linecap="round"/><ellipse cx="0" cy="${-len}" rx="3.4" ry="4.4" fill="${c}" stroke="${OUT}" stroke-width="1.6"/></g></g>`;
+      }
+    }
+    return `<svg viewBox="-100 -100 200 200">${s}</svg>`;
+  }
+  const DRAW = {
+    rosa: () => radial([
+      {n:5,l:80,w:40,c:'#C7304A'},{n:5,l:62,w:34,c:'#E2445E',off:36},{n:5,l:44,w:26,c:'#F2697F',off:12}
+    ], {r:16,c:'#B32A44',swirl:true}),
+    girassol: () => radial([
+      {n:20,l:84,w:13,c:'#E99A00',shape:'pointed',off:9},{n:20,l:74,w:12,c:'#FFC845',shape:'pointed'}
+    ], {r:38,c:'#5B3415',seeds:true}),
+    lotus: () => radial([
+      {n:8,l:88,w:27,c:'#F07AA2',shape:'pointed'},{n:8,l:66,w:22,c:'#F9B3CB',shape:'pointed',off:22.5},{n:6,l:40,w:16,c:'#FFE0EA',shape:'pointed',off:10}
+    ], {r:13,c:'#F7C948'}),
+    cerejeira: () => radial([
+      {n:5,l:76,w:34,c:'#F8B7C8',shape:'notch',off:0}
+    ], {r:16,c:'#F27A9B',stamens:{n:10,len:30,c:'#F7C948'}}),
+    lirio: () => radial([
+      {n:3,l:90,w:28,c:'#FFFFFF',shape:'pointed',off:60,vein:'#EBD9A2'},{n:3,l:86,w:25,c:'#FFFDF4',shape:'pointed',vein:'#EBD9A2'}
+    ], {r:9,c:'#DCE6A8',stamens:{n:6,len:44,c:'#D4AF37'}}),
+    orquidea: () => {
+      let s = '';
+      [0, 128, -128].forEach(a => s += `<g transform="rotate(${a})"><path class="petal" d="${petalPath(82, 20, 'pointed')}" fill="#D77FC0" ${ST}/></g>`);
+      [62, -62].forEach(a => s += `<g transform="rotate(${a})"><path class="petal" d="${petalPath(70, 32)}" fill="#EBA6D8" ${ST}/></g>`);
+      s += `<path class="petal" d="M0 6C26 8 34 42 22 62C14 74-14 74-22 62C-34 42-26 8 0 6Z" fill="#B9529C" ${ST}/>`;
+      s += `<circle cx="-8" cy="38" r="3" fill="#F7D4EC"/><circle cx="8" cy="42" r="3" fill="#F7D4EC"/><circle cx="0" cy="54" r="3" fill="#F7D4EC"/>`;
+      s += `<ellipse class="petal" cx="0" cy="-2" rx="9" ry="12" fill="#FFF3FA" ${ST}/><circle cx="0" cy="-7" r="3.5" fill="#F7C948"/>`;
+      return `<svg viewBox="-100 -100 200 200">${s}</svg>`;
+    },
+    lavanda: () => {
+      const stem = (rot, len) => {
+        let g = `<g transform="rotate(${rot} 0 95)"><path d="M0 95C3 50-3 10 0 ${95-len}" fill="none" stroke="#4F9361" stroke-width="5" stroke-linecap="round"/>`;
+        const top = 95 - len, buds = Math.round(len / 13);
+        for (let i = 0; i < buds; i++) {
+          g += `<ellipse class="petal" cx="${i % 2 ? 6 : -6}" cy="${top + i * 9}" rx="6.5" ry="9" fill="${i%2?'#B9A0FA':'#8E6BE3'}" stroke="${OUT}" stroke-width="2"/>`;
+        }
+        return g + '</g>';
+      };
+      let s = stem(-20, 120) + stem(18, 130) + stem(0, 170);
+      s += `<path d="M0 92C-30 80-40 60-42 48C-20 56-8 70 0 92Z" fill="#6DB27C" ${ST}/>`;
+      s += `<path d="M0 92C30 82 42 64 44 52C22 58 8 72 0 92Z" fill="#5FA46F" ${ST}/>`;
+      return `<svg viewBox="-100 -100 200 200">${s}</svg>`;
+    }
+  };
+  const SWAY = new Set(['lavanda']);
+  const STAR = `<svg class="sparkle" viewBox="-13 -13 26 26"><path d="M0 -12C2-2 2-2 12 0 2 2 2 2 0 12-2 2-2 2-12 0-2-2-2-2 0-12Z"/></svg>`;
+  const BOW = `<svg class="gift__bow" viewBox="0 0 100 64"><g stroke="${OUT}" stroke-width="2.6" stroke-linejoin="round" fill="currentColor"><path d="M44 44 30 62h11l9-14Z"/><path d="M56 44l14 18H59l-9-14Z"/><path d="M50 40C30 6 2 8 6 28 9 44 34 46 50 40Z"/><path d="M50 40C70 6 98 8 94 28 91 44 66 46 50 40Z"/><ellipse cx="50" cy="40" rx="9" ry="8"/></g><path d="M44 36C34 22 18 20 17 28" fill="none" stroke="${OUT}" stroke-width="1.6" stroke-linecap="round" opacity=".5"/><path d="M56 36C66 22 82 20 83 28" fill="none" stroke="${OUT}" stroke-width="1.6" stroke-linecap="round" opacity=".5"/></svg>`;
+
+  document.querySelectorAll('[data-flower]').forEach(el => { el.innerHTML = DRAW[el.dataset.flower](); });
+
+  // ---------- Estado salvo ----------
+  function load() {
+    try { const raw = localStorage.getItem(STORE); if (raw) { const v = JSON.parse(raw); return { descobertas: Array.isArray(v.descobertas) ? v.descobertas : [], som: v.som !== false }; } } catch (e) {}
+    return { descobertas: [], som: true };
+  }
+  function save() { try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) {} }
+  const state = load();
+  let abrindo = null, insistiu = 0;
+  const found = id => state.descobertas.includes(id);
+  const countFound = () => FLORES.filter(f => found(f.id)).length;
+  const allFound = () => FLORES.every(f => found(f.id));
+
+  // ---------- Som (sininhos gerados no navegador) ----------
+  let actx = null;
+  function chime(freq, t, dur, vol = .08) {
+    if (!state.som) return;
+    try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+    if (actx.state === 'suspended') actx.resume();
+    const t0 = actx.currentTime + t, g = actx.createGain();
+    g.gain.setValueAtTime(1e-4, t0);
+    g.gain.exponentialRampToValueAtTime(vol, t0 + .02);
+    g.gain.exponentialRampToValueAtTime(1e-4, t0 + dur);
+    g.connect(actx.destination);
+    for (const [m, a] of [[1, 1], [2.01, .25]]) {
+      const o = actx.createOscillator(), og = actx.createGain();
+      o.type = 'sine'; o.frequency.value = freq * m; og.gain.value = a;
+      o.connect(og).connect(g); o.start(t0); o.stop(t0 + dur + .05);
+    }
+  }
+  const soundBtn = $('#sound-toggle');
+  soundBtn.setAttribute('aria-pressed', String(state.som));
+  soundBtn.addEventListener('click', () => {
+    state.som = !state.som; save();
+    soundBtn.setAttribute('aria-pressed', String(state.som));
+    if (state.som) chime(783.99, 0, .6, .05);
+  });
+
+  // ---------- Tema ----------
+  const root = document.documentElement;
+  try { const t = localStorage.getItem('jardim-theme'); if (t) root.dataset.theme = t; } catch (e) {}
+  if (!root.dataset.theme) root.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  $('#theme-toggle').addEventListener('click', () => {
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('jardim-theme', root.dataset.theme); } catch (e) {}
+  });
+
+  const G = window.gsap;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const anim = !!G && !reduce;
+  const fine = matchMedia('(pointer: fine)').matches;
+  if (G && window.ScrollTrigger) G.registerPlugin(ScrollTrigger);
+
+  // Pétalas animadas com Web Animations + transform-box (o GSAP calcula errado a origem em SVG escalado a 0)
+  function bloom(svg, delay = 0, dur = .55, stagger = .015) {
+    if (!anim || !svg) return;
+    svg.querySelectorAll('.petal').forEach((p, i) => p.animate(
+      [{ transform: 'scale(0)' }, { transform: 'scale(1)' }],
+      { duration: dur * 1000, delay: (delay + i * stagger) * 1000, easing: 'cubic-bezier(.34,1.7,.64,1)', fill: 'backwards' }
+    ));
+  }
+  function splitChars(el) {
+    el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
+    const walk = node => [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.append(' '); return; }
+          const w = document.createElement('span');
+          w.className = 'word'; w.setAttribute('aria-hidden', 'true');
+          for (const ch of part) { const c = document.createElement('span'); c.className = 'char'; c.textContent = ch; w.append(c); }
+          frag.append(w);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) walk(n);
+    });
+    walk(el);
+    return el.querySelectorAll('.char');
+  }
+
+  // ---------- Caixas ----------
+  const closedHTML = f => `<span class="gift__flower">${DRAW[f.id]()}</span><span class="gift__body"></span><span class="gift__lid">${BOW}</span>`;
+  const foundHTML = f => `<span class="gift__found">${DRAW[f.id]()}${STAR}</span>`;
+  const giftsEl = $('#gifts');
+  const giftBtns = {};
+  FLORES.forEach((f, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<button class="gift" type="button" style="--laco:${f.laco};--papel:${f.papel}"><span class="gift__scene"><span class="gift__float"></span></span><span class="gift__name"></span></button>`;
+    const btn = li.firstElementChild;
+    btn.addEventListener('click', () => abrir(f.id));
+    giftsEl.append(li);
+    giftBtns[f.id] = btn;
+    renderGift(f);
+    if (anim) G.to(btn.querySelector('.gift__float'), { y: -8, duration: 1.6, yoyo: true, repeat: -1, ease: 'sine.inOut' }).progress((i * .37) % 1);
+  });
+  function renderGift(f) {
+    const btn = giftBtns[f.id], ok = found(f.id);
+    btn.dataset.estado = ok ? 'descoberta' : 'fechada';
+    btn.setAttribute('aria-label', ok ? `Rever ${f.nome}` : 'Abrir caixa de presente');
+    btn.querySelector('.gift__float').innerHTML = ok ? foundHTML(f) : closedHTML(f);
+    btn.querySelector('.gift__name').textContent = ok ? f.nome : '';
+  }
+
+  const finalGift = $('#final-gift'), finalMsg = $('#final-msg'), resetBtn = $('#reset');
+  function renderFinalGift() {
+    const fl = finalGift.querySelector('.gift__float');
+    fl.innerHTML = closedHTML(FINAL);
+    if (G) G.set([fl, finalGift.querySelector('.gift__aura')], { clearProps: 'transform' });
+  }
+  function updateUI() {
+    const n = countFound(), total = FLORES.length, faltam = total - n, all = n === total;
+    $('#progress-fill').style.width = (n / total * 100) + '%';
+    $('#progress-label').textContent = `${n} de ${total} flores`;
+    $('#progress').setAttribute('aria-valuenow', n);
+    finalGift.toggleAttribute('data-locked', !all);
+    finalGift.setAttribute('aria-label', all ? 'Abrir o último presente' : `Último presente, ainda adormecido. Faltam ${faltam} flores.`);
+    finalMsg.textContent = all
+      ? 'Seu último presente acordou. Abra quando quiser.'
+      : insistiu > 0 ? 'Falta pouco. Ainda há flores para descobrir.'
+      : `Este presente está adormecido… ${faltam === 1 ? 'falta 1 flor' : `faltam ${faltam} flores`}.`;
+    resetBtn.hidden = n === 0;
+  }
+  renderFinalGift();
+  updateUI();
+
+  function abrir(id) {
+    if (abrindo) return;
+    const f = FLORES.find(x => x.id === id);
+    const btn = giftBtns[id];
+    if (found(id)) { openModal(f, btn); return; }
+    abrindo = id;
+    [659.25, 830.61, 987.77].forEach((fr, i) => chime(fr, .25 + .09 * i, 1.2));
+    const done = () => {
+      state.descobertas.push(id); save();
+      abrindo = null;
+      renderGift(f); updateUI();
+      if (anim) G.from(btn.querySelector('.gift__found'), { scale: .7, duration: .6, ease: 'back.out(2)' });
+      openModal(f, btn);
+    };
+    if (!anim) { setTimeout(done, 150); return; }
+    const fl = btn.querySelector('.gift__float');
+    const flower = fl.querySelector('.gift__flower');
+    G.set(flower, { y: 20, scale: .3 });
+    G.timeline({ onComplete: done })
+      .to(fl, { rotation: -6, duration: .07, yoyo: true, repeat: 5, ease: 'sine.inOut' })
+      .to(fl.querySelector('.gift__lid'), { y: -110, x: 24, rotation: 32, opacity: 0, duration: .5, ease: 'power2.out' })
+      .to(flower, { opacity: 1, y: -24, scale: 1.15, duration: .55, ease: 'back.out(1.8)' }, '<.08')
+      .add(() => bloom(flower.querySelector('svg')), '<')
+      .to(fl.querySelector('.gift__body'), { y: 30, opacity: 0, duration: .4 }, '<.15');
+  }
+
+  let resetArmed = false, resetTimer;
+  resetBtn.addEventListener('click', () => {
+    if (!resetArmed) {
+      resetArmed = true; resetBtn.textContent = 'Tem certeza? Clique de novo para fechar todas';
+      resetTimer = setTimeout(() => { resetArmed = false; resetBtn.textContent = 'Fechar as caixas de novo'; }, 4000);
+      return;
+    }
+    clearTimeout(resetTimer); resetArmed = false; resetBtn.textContent = 'Fechar as caixas de novo';
+    state.descobertas = []; insistiu = 0; save();
+    FLORES.forEach(renderGift); renderFinalGift(); updateUI();
+    if (lenis) lenis.scrollTo('#jardim', { offset: -90 }); else $('#jardim').scrollIntoView();
+  });
+
+  // ---------- Modal da flor ----------
+  const modal = $('#modal'), modalCard = $('#modal-card');
+  const background = [$('#main'), $('#header'), $('#footer')];
+  const setInert = v => background.forEach(el => { el.inert = v; });
+  let lastFocus = null;
+  function openModal(f, opener) {
+    lastFocus = opener || document.activeElement;
+    modalCard.style.setProperty('--laco', f.laco);
+    $('#modal-art').innerHTML = DRAW[f.id]();
+    $('#modal-name').textContent = f.nome;
+    $('#modal-chips').innerHTML = f.significados.map(s => `<li>${s}</li>`).join('');
+    $('#modal-text').textContent = f.curiosidade;
+    $('#modal-quote').textContent = `“${f.metafora}”`;
+    modal.hidden = false; setInert(true);
+    if (lenis) lenis.stop();
+    modalCard.focus();
+    if (!anim) return;
+    G.fromTo('.modal__backdrop', { opacity: 0 }, { opacity: 1, duration: .3 });
+    G.fromTo(modalCard, { y: 50, scale: .9, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: .55, ease: 'back.out(1.6)' });
+    bloom($('#modal-art svg'), .15, .7);
+    G.fromTo(modalCard.querySelectorAll('.reveal'), { y: 16, opacity: 0 }, { y: 0, opacity: 1, stagger: .08, delay: .25, duration: .45 });
+  }
+  function closeModal() {
+    if (modal.hidden) return;
+    const end = () => { modal.hidden = true; setInert(false); if (lenis) lenis.start(); if (lastFocus) lastFocus.focus({ preventScroll: true }); };
+    if (anim) G.to(modalCard, { y: 30, opacity: 0, scale: .95, duration: .22, onComplete: end }); else end();
+  }
+  modal.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeModal(); });
+
+  // ---------- Presente final ----------
+  const finalEl = $('#final'), flash = $('#flash');
+  $('#final-quote').textContent = `“${FINAL.metafora}”`;
+  $('#letter').innerHTML = CARTA.trim().split(/\n\s*\n/).map(p => `<p></p>`).join('') + (ASSINATURA ? '<p class="letter__sign"></p>' : '');
+  const letterPs = $('#letter').querySelectorAll('p');
+  CARTA.trim().split(/\n\s*\n/).forEach((p, i) => { letterPs[i].textContent = p; });
+  if (ASSINATURA) $('#letter .letter__sign').textContent = ASSINATURA;
+  const finalChars = anim ? splitChars($('#final-title')) : [];
+
+  const fp = $('#final-petals');
+  const fpColors = ['#ffffff', '#fbf6ea', '#f7e9c9', '#fdeef2'];
+  for (let i = 0; i < 22; i++) {
+    const s = document.createElement('span'), size = rand(9, 18), dur = rand(9, 18);
+    s.className = 'fpetal';
+    s.style.cssText = `left:${rand(0, 100)}%;width:${size}px;height:${size}px;background:${fpColors[i % 4]};animation-duration:${dur}s;animation-delay:${-rand(0, dur)}s`;
+    fp.append(s);
+  }
+  for (let i = 0; i < 10; i++) {
+    fp.insertAdjacentHTML('beforeend', `<svg class="star" style="--x:${rand(4, 94)}%;--y:${rand(4, 94)}%;--d:${rand(0, 2.5).toFixed(2)}s" viewBox="-13 -13 26 26"><path d="M0 -12C2-2 2-2 12 0 2 2 2 2 0 12-2 2-2 2-12 0-2-2-2-2 0-12Z"/></svg>`);
+  }
+
+  finalGift.addEventListener('click', () => {
+    if (abrindo) return;
+    if (!allFound()) {
+      insistiu++;
+      chime(392, 0, .5, .05); chime(329.63, .14, .7, .05);
+      if (anim) G.timeline().to(finalGift.querySelector('.gift__scene'), { keyframes: [{ rotation: -7, duration: .08 }, { rotation: 7, duration: .08 }, { rotation: -5, duration: .08 }, { rotation: 5, duration: .08 }, { rotation: 0, duration: .1 }] });
+      updateUI();
+      return;
+    }
+    abrindo = FINAL.id;
+    [523.25, 659.25, 783.99, 1046.5, 1318.51].forEach((fr, i) => chime(fr, .4 + .22 * i, 2.4, .07));
+    const finish = () => { abrindo = null; showFinal(); };
+    if (!anim) { setTimeout(finish, 200); return; }
+    const fl = finalGift.querySelector('.gift__float');
+    const flower = fl.querySelector('.gift__flower');
+    G.set(flower, { y: 20, scale: .3 });
+    G.timeline({ onComplete: finish })
+      .to(fl, { rotation: -5, duration: .08, yoyo: true, repeat: 7, ease: 'sine.inOut' })
+      .to(finalGift.querySelector('.gift__aura'), { scale: 2.2, duration: 1.4, ease: 'power2.out' }, 0)
+      .to(fl.querySelector('.gift__lid'), { y: -130, x: -20, rotation: -28, opacity: 0, duration: .6, ease: 'power2.out' })
+      .to(flower, { opacity: 1, y: -40, scale: 1.25, duration: .7, ease: 'back.out(1.6)' }, '<.1')
+      .add(() => bloom(flower.querySelector('svg'), 0, .8), '<')
+      .to(fl.querySelector('.gift__body'), { y: 40, opacity: 0, duration: .5 }, '<.2')
+      .to(flash, { opacity: 1, duration: .5 }, '+=.15');
+  });
+
+  function showFinal() {
+    finalEl.hidden = false; finalEl.scrollTop = 0; setInert(true);
+    if (lenis) lenis.stop();
+    finalEl.focus();
+    if (!anim) { flash.style.opacity = 0; return; }
+    G.to(flash, { opacity: 0, duration: .9, delay: .1 });
+    G.timeline({ delay: .2 })
+      .fromTo('.final__aura', { scale: .4, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.4 }, 0)
+      .add(() => bloom($('#final-lily svg'), 0, .9, .07), 0)
+      .to({}, { duration: 1.2 }, 0)
+      .fromTo(finalChars, { yPercent: 100, opacity: 0, rotation: () => rand(-15, 15) }, { yPercent: 0, opacity: 1, rotation: 0, stagger: .05, duration: .8, ease: 'back.out(1.8)' }, '-=.3')
+      .fromTo('.final__quote', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: .7 }, '+=.2')
+      .fromTo('.letter', { y: 40, opacity: 0, rotation: -4 }, { y: 0, opacity: 1, rotation: -1, duration: .9, ease: 'back.out(1.4)' }, '+=.3')
+      .fromTo('.final__bye', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: .6 }, '+=.4')
+      .fromTo('#final-back', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: .5 }, '-=.2');
+  }
+  function hideFinal() {
+    const end = () => {
+      finalEl.hidden = true; setInert(false);
+      renderFinalGift();
+      if (lenis) { lenis.start(); lenis.scrollTo('#ultimo', { immediate: true, offset: -90 }); } else $('#ultimo').scrollIntoView();
+      finalGift.focus({ preventScroll: true });
+      if (anim) G.set(finalEl, { clearProps: 'opacity' });
+    };
+    if (anim) G.to(finalEl, { opacity: 0, duration: .4, onComplete: end }); else end();
+  }
+  $('#final-back').addEventListener('click', hideFinal);
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (!finalEl.hidden) hideFinal(); else closeModal();
+  });
+
+  // ---------- Rolagem suave e links ----------
+  let lenis = null;
+  if (anim && window.Lenis) {
+    lenis = new Lenis({ lerp: .09 });
+    lenis.on('scroll', ScrollTrigger.update);
+    G.ticker.add(t => lenis.raf(t * 1000));
+    G.ticker.lagSmoothing(0);
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    if (lenis) lenis.scrollTo(target, { offset: target.id === 'inicio' ? 0 : -90, duration: 1.4 });
+    else target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+  }));
+  $('#enter').addEventListener('click', () => { chime(659.25, 0, .8, .05); chime(987.77, .12, 1, .05); });
+
+  const loader = document.querySelector('.loader');
+  if (!anim) { if (loader && reduce) loader.remove(); return; }
+
+  // ---------- Loader + entrada ----------
+  const heroChars = splitChars($('#hero-title'));
+  G.set(heroChars, { yPercent: 110, opacity: 0, rotation: () => rand(-18, 18) });
+  G.set('.hero-fade', { y: 24, opacity: 0 });
+  function intro() {
+    G.timeline()
+      .to(heroChars, { yPercent: 0, opacity: 1, rotation: 0, duration: .8, stagger: .028, ease: 'back.out(1.8)' })
+      .to('.hero-fade', { y: 0, opacity: 1, duration: .6, stagger: .1, ease: 'power3.out' }, '-=.5');
+    document.querySelectorAll('.hero__trio svg, .bloom svg').forEach((svg, i) => bloom(svg, .15 + i * .1));
+  }
+  if (loader) {
+    loader.style.animation = 'none';
+    const fl = loader.querySelector('svg');
+    G.timeline({ onComplete: () => loader.remove() })
+      .add(() => bloom(fl, 0, .5, .04))
+      .from('.loader__text', { y: 12, opacity: 0, duration: .4 }, .2)
+      .to({}, { duration: .5 })
+      .to(fl, { rotation: 140, scale: 1.12, duration: .8, ease: 'power2.inOut' })
+      .set(loader, { borderRadius: '0 0 50% 50% / 0 0 18vh 18vh' })
+      .to(loader, { yPercent: -110, duration: .9, ease: 'power3.inOut' })
+      .add(intro, '-=.5');
+  } else intro();
+
+  // ---------- Canteiro ----------
+  const hero = $('.hero'), garden = hero.querySelector('.hero__garden');
+  document.querySelectorAll('.bloom').forEach(b => {
+    const svg = b.querySelector('svg');
+    G.to(svg, { rotation: Math.random() > .5 ? 360 : -360, duration: rand(30, 50), repeat: -1, ease: 'none' });
+    G.to(b, { y: -140 * parseFloat(b.dataset.depth), ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+  });
+  G.to('.trio-c svg', { rotation: 6, transformOrigin: '50% 95%', duration: 2.4, yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  G.to('.trio-b svg', { rotation: 360, duration: 60, repeat: -1, ease: 'none' });
+
+  const petalColors = ['#FF8FAB', '#FFC1D1', '#F2697F', '#FFD45C', '#C7B2FF'];
+  for (let i = 0; i < 12; i++) {
+    const d = document.createElement('div');
+    d.className = 'fall';
+    d.style.left = rand(0, 100) + '%';
+    d.style.width = rand(14, 26) + 'px';
+    d.innerHTML = `<svg viewBox="-14 -28 28 30"><path d="M0 0C9-6 11-18 0-26C-11-18-9-6 0 0Z" fill="${petalColors[i % petalColors.length]}" stroke="${OUT}" stroke-width="1.6"/></svg>`;
+    garden.append(d);
+    G.to(d, { y: () => hero.offsetHeight + 80, rotation: rand(-360, 360), duration: rand(10, 18), ease: 'none', repeat: -1 }).progress(Math.random());
+    G.to(d, { x: '+=' + rand(30, 90), duration: rand(2, 4), yoyo: true, repeat: -1, ease: 'sine.inOut' });
+  }
+  const planted = [];
+  const kinds = ['rosa', 'girassol', 'lotus', 'cerejeira', 'orquidea'];
+  hero.addEventListener('click', e => {
+    if (e.target.closest('a,button')) return;
+    const r = hero.getBoundingClientRect();
+    const d = document.createElement('div');
+    d.className = 'planted';
+    d.innerHTML = DRAW[kinds[Math.floor(Math.random() * kinds.length)]]();
+    d.style.left = (e.clientX - r.left) + 'px';
+    d.style.top = (e.clientY - r.top) + 'px';
+    d.style.width = rand(50, 95) + 'px';
+    garden.append(d);
+    G.set(d, { xPercent: -50, yPercent: -50 });
+    G.from(d, { rotation: -120, duration: .9, ease: 'back.out(1.6)' });
+    bloom(d.querySelector('svg'));
+    chime(rand(600, 1000), 0, .5, .03);
+    planted.push(d);
+    if (planted.length > 14) { const old = planted.shift(); G.to(old, { scale: 0, duration: .4, onComplete: () => old.remove() }); }
+  });
+
+  // ---------- Títulos ----------
+  document.querySelectorAll('[data-split]').forEach(el => {
+    G.from(splitChars(el), {
+      y: 40, rotation: () => rand(-25, 25), duration: .7, stagger: .03, ease: 'back.out(2)',
+      scrollTrigger: { trigger: el, start: 'top 85%' }
+    });
+  });
+  G.utils.toArray('.gifts li').forEach((li, i) => {
+    if (li.getBoundingClientRect().top > innerHeight) G.set(li, { y: 70 });
+  });
+  ScrollTrigger.batch('.gifts li', {
+    start: 'top 92%',
+    onEnter: b => G.to(b, { y: 0, duration: .8, stagger: .1, ease: 'back.out(1.5)', overwrite: 'auto' })
+  });
+
+  // ---------- Cursor ----------
+  if (fine) {
+    const c = document.createElement('div');
+    c.className = 'cursor';
+    c.innerHTML = `<div class="cursor__in">${DRAW.cerejeira()}</div>`;
+    document.body.append(c);
+    const xTo = G.quickTo(c, 'x', { duration: .35, ease: 'power3' });
+    const yTo = G.quickTo(c, 'y', { duration: .35, ease: 'power3' });
+    G.set(c, { x: -100, y: -100 });
+    addEventListener('mousemove', e => { xTo(e.clientX); yTo(e.clientY); });
+    G.to(c.querySelector('svg'), { rotation: 360, duration: 6, repeat: -1, ease: 'none' });
+    document.addEventListener('mouseover', e => c.classList.toggle('is-big', !!e.target.closest('a,button')));
+  }
+})();
+</script>
+</body>
+</html>
