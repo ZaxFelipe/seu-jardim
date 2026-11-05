@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Jardim de Presentes</title>
+<title>Seu jardim</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Um jardim de caixas de presente, cada uma escondendo uma flor.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Cg fill='%23F8B7C8' stroke='%233A1838' stroke-width='4'%3E%3Cellipse cy='-24' rx='16' ry='22'/%3E%3Cellipse cy='-24' rx='16' ry='22' transform='rotate(72)'/%3E%3Cellipse cy='-24' rx='16' ry='22' transform='rotate(144)'/%3E%3Cellipse cy='-24' rx='16' ry='22' transform='rotate(216)'/%3E%3Cellipse cy='-24' rx='16' ry='22' transform='rotate(288)'/%3E%3C/g%3E%3Ccircle r='10' fill='%23F27A9B' stroke='%233A1838' stroke-width='4'/%3E%3C/svg%3E">
@@ -338,7 +338,7 @@ a{color:inherit}
 /* ---------- Footer ---------- */
 .footer{background:var(--petal);color:var(--on-accent);padding-block:30px 40px;overflow:hidden}
 .wave--petal{color:var(--petal);background:var(--bg)}
-.footer__big{margin:0;font-family:var(--f-display);font-size:clamp(4rem,17vw,13rem);line-height:.9;letter-spacing:-.02em}
+.footer__big{margin:0;font-family:var(--f-display);font-size:clamp(2.8rem,10vw,8.5rem);line-height:.95;letter-spacing:-.02em;text-wrap:balance}
 .footer__row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;margin-top:22px;font-weight:600}
 .footer__row p{margin:0}
 
@@ -369,7 +369,7 @@ a{color:inherit}
 
 <header class="header" id="header">
   <div class="header__bar">
-    <a class="logo" href="#inicio" aria-label="Jardim de Presentes, voltar ao início"><span data-flower="cerejeira"></span>Jardim<span class="logo__long">&nbsp;de Presentes</span></a>
+    <a class="logo" href="#inicio" aria-label="Seu jardim, voltar ao início"><span data-flower="cerejeira"></span>Seu jardim</a>
     <nav class="nav" aria-label="Seções">
       <a href="#jardim">Caixas</a>
       <a href="#ultimo">Último presente</a>
@@ -438,7 +438,7 @@ a{color:inherit}
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">seis caixas, seis flores</p>
-        <h2 class="section-title" data-split>Jardim de Presentes</h2>
+        <h2 class="section-title" data-split>Seu jardim</h2>
         <p class="section-lead">Toque em uma caixa para descobrir a flor escondida.</p>
         <div class="progress" role="progressbar" aria-label="Flores descobertas" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progress">
           <div class="progress__track"><div class="progress__fill" id="progress-fill"></div></div>
@@ -476,7 +476,7 @@ a{color:inherit}
 <svg class="wave wave--petal" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46C240 6 480 86 720 46S1200 6 1440 46V80H0Z" fill="currentColor"/></svg>
 <footer class="footer" id="footer">
   <div class="wrap">
-    <p class="footer__big">Jardim</p>
+    <p class="footer__big">De Felipe para Gabi</p>
     <div class="footer__row">
       <p>Um jardim de caixas de presente, cada uma escondendo uma flor.</p>
       <a class="btn btn--ghost" href="#inicio">Voltar ao topo ↑</a>
